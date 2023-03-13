@@ -72,3 +72,18 @@ app.delete('/books/:id', (req, res) => {
       res.status(500).json({ error: 'Could not delete the document' });
     });
 });
+
+app.patch('/books/:id', (req, res) => {
+  const updates = req.body;
+
+  const id = new ObjectId(req.params.id);
+
+  db.collection('books')
+    .updateOne({ _id: id }, { $set: updates })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: 'Could not update the document' });
+    });
+});
