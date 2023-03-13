@@ -4,6 +4,8 @@ const { connectToDb, getDb } = require('./db');
 
 // initialize the app by invoking the express function
 const app = express();
+// with this we can use any requests in our code
+app.use(express.json());
 
 // db connection
 let db;
@@ -42,5 +44,18 @@ app.get('/books/:id', (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({ error: 'Could not find the document' });
+    });
+});
+
+app.post('/books', (req, res) => {
+  const book = req.body;
+
+  db.collection('books')
+    .insertOne(book)
+    .then((result) => {
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: 'Could not create a new document' });
     });
 });
